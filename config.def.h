@@ -57,7 +57,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "termite", NULL };
-static const char *browsercmd[]  = { "firefox", NULL };
+static const char *browsercmd[]  = { "google-chrome-stable", NULL };
 static const char *editorcmd[]  = { "subl3", NULL };
 
 #include "includes/movestack.c"
