@@ -2,7 +2,8 @@
 
 /* appearance */
 static const char *fonts[] = {
-	"terminus:size=10"
+	"FontAwesome:size=10",
+	"Terminus:size=10"
 };
 
 static const char dmenufont[]           = "terminus:size=10";
@@ -19,7 +20,7 @@ static const int topbar                 = 1;        /* 0 means bottom bar */
 static const Bool viewontag             = True;
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "\uf268", "\uf121", "\uf126", "\uf120", "\uf0e0", "\uf108", "\uf025", "\uf0ad" };
 
 static const Rule rules[] = {
     { "Galculator",          NULL, NULL, 0, 1, 1, -1 },
@@ -37,10 +38,10 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ "\uf03a",   tile },    /* first entry is default */
+	{ "\uf24d",   NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
-	{ "[#]",      gaplessgrid },
+	{ "\uf00a",   gaplessgrid },
 	{ "[@]",      spiral },
 	{ "[\\]",     dwindle }
 };
@@ -104,7 +105,6 @@ static Key keys[] = {
 	TAGKEYS(                        XK_6,                      5)
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
