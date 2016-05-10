@@ -9,9 +9,9 @@ static const char *fonts[] = {
 static const char dmenufont[]           = "terminus:size=10";
 static const char normbordercolor[]     = "#222222";
 static const char normbgcolor[]         = "#000000";
-static const char normfgcolor[]         = "#666666";
-static const char selbordercolor[]      = "#666666";
-static const char selbgcolor[]          = "#666666";
+static const char normfgcolor[]         = "#A6A6A6";
+static const char selbordercolor[]      = "#A6A6A6";
+static const char selbgcolor[]          = "#A6A6A6";
 static const char selfgcolor[]          = "#000000";
 static const unsigned int borderpx      = 1;        /* border pixel of windows */
 static const unsigned int snap          = 0;       /* snap pixel */
@@ -117,4 +117,3 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
