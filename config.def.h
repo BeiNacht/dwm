@@ -18,6 +18,7 @@ static const unsigned int snap          = 0;       /* snap pixel */
 static const int showbar                = 1;        /* 0 means no bar */
 static const int topbar                 = 1;        /* 0 means bottom bar */
 static const Bool viewontag             = True;
+static const unsigned int gappx     = 5; 
 
 /* tagging */
 static const char *tags[] = { "\uf268", "\uf121", "\uf126", "\uf120", "\uf0e0", "\uf108", "\uf025", "\uf0ad" };
