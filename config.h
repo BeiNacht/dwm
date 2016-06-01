@@ -25,7 +25,7 @@ static const Bool viewontag             = True;
 static const unsigned int gappx     = 5; 
 
 /* tagging */
-static const char *tags[] = { "\uf268", "\uf121", "\uf126", "\uf120", "\uf0e0", "\uf108", "\uf025", "\uf0ad" };
+static const char *tags[] = { "\uf269", "\uf121", "\uf126", "\uf120", "\uf0e0", "\uf108", "\uf025", "\uf0ad" };
 
 static const Rule rules[] = {
     { "Galculator",          NULL, NULL, 0, 1, 1, -1 },
@@ -64,16 +64,16 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+static const char *roficmd[] = { "rofi", "-show", "run", "-font", "Terminus 10" };
 static const char *termcmd[]  = { "termite", NULL };
 static const char *browsercmd[]  = { "firefox", NULL };
 static const char *editorcmd[]  = { "subl3", NULL };
 
 #include "includes/movestack.c"
+#include <X11/XF86keysym.h>
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_r,      spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_w,      spawn,          {.v = browsercmd } },
 	{ MODKEY,                       XK_e,      spawn,          {.v = editorcmd } },
@@ -91,7 +91,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ AltMask,                      XK_F4,      killclient,     {0} },
+	{ AltMask,                      XK_F4,     killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
