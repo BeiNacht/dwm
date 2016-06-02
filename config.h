@@ -6,15 +6,14 @@ static const char *fonts[] = {
 	"Terminus:size=10"
 };
 
-static const char dmenufont[]           = "terminus:size=10";
-static const char normbordercolor[]     = "#222222";
-static const char normbgcolor[]         = "#000000";
-static const char normfgcolor[]         = "#A6A6A6";
-static const char selbordercolor[]      = "#A6A6A6";
-static const char selbgcolor[]          = "#A6A6A6";
-static const char selfgcolor[]          = "#000000";
-static const unsigned int borderpx      = 1;        /* border pixel of windows */
-static const unsigned int snap          = 0;       /* snap pixel */
+static const char normbordercolor[]      = "#222222";
+static const char normbgcolor[]          = "#000000";
+static const char normfgcolor[]          = "#A6A6A6";
+static const char selbordercolor[]       = "#A6A6A6";
+static const char selbgcolor[]           = "#A6A6A6";
+static const char selfgcolor[]           = "#000000";
+static const unsigned int borderpx       = 1;        /* border pixel of windows */
+static const unsigned int snap           = 16;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, 0: display systray on the last monitor*/
@@ -22,10 +21,10 @@ static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar                = 1;        /* 0 means no bar */
 static const int topbar                 = 1;        /* 0 means bottom bar */
 static const Bool viewontag             = True;
-static const unsigned int gappx     = 5; 
+static const unsigned int gappx     = 5;
 
 /* tagging */
-static const char *tags[] = { "\uf269", "\uf121", "\uf126", "\uf120", "\uf0e0", "\uf108", "\uf025", "\uf0ad" };
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
     { "Galculator",          NULL, NULL, 0, 1, 1, -1 },
@@ -40,6 +39,11 @@ static const Rule rules[] = {
 static const float mfact     = 0.65; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
+static const int  layoutaxis[] = {
+	1,    /* layout axis: 1 = x, 2 = y; negative values mirror the layout */
+	2,    /* master axis: 1 = x (left to right), 2 = y (top to bottom), 3 = z (monocle) */
+	2,    /* stack  axis: 1 = x (left to right), 2 = y (top to bottom), 3 = z (monocle) */
+};
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -66,8 +70,6 @@ static const Layout layouts[] = {
 /* commands */
 static const char *roficmd[] = { "rofi", "-show", "run", "-font", "Terminus 10" };
 static const char *termcmd[]  = { "termite", NULL };
-static const char *browsercmd[]  = { "firefox", NULL };
-static const char *editorcmd[]  = { "subl3", NULL };
 
 #include "includes/movestack.c"
 #include <X11/XF86keysym.h>
@@ -75,8 +77,6 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_r,      spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_w,      spawn,          {.v = browsercmd } },
-	{ MODKEY,                       XK_e,      spawn,          {.v = editorcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -103,8 +103,12 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_Left,   cycle,          {.i = -1 } },
 	{ MODKEY,                       XK_Right,  cycle,          {.i = +1 } },
-	{ MODKEY|ControlMask,           XK_Left,   tagcycle,       {.i = -1 } },
-	{ MODKEY|ControlMask,           XK_Right,  tagcycle,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_Left,   tagcycle,       {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_Right,  tagcycle,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_Tab,    rotatelayoutaxis, {.i = 0} },    /* 0 = layout axis */
+	{ MODKEY|ControlMask,           XK_Tab,    rotatelayoutaxis, {.i = 1} },    /* 1 = master axis */
+	{ MODKEY|ControlMask|ShiftMask, XK_Tab,    rotatelayoutaxis, {.i = 2} },    /* 2 = stack axis */
+	{ MODKEY|ShiftMask,             XK_Return, mirrorlayout,     {0} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -113,6 +117,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_6,                      5)
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
+	TAGKEYS(                        XK_9,                      7)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
