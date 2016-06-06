@@ -47,7 +47,7 @@ static const int  layoutaxis[] = {
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "\uf03a",   tile },    /* first entry is default */
+	{ "[]=",      tile },    /* first entry is default */ 
 	{ "\uf24d",   NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
 	{ "\uf00a",   gaplessgrid },
@@ -70,6 +70,8 @@ static const Layout layouts[] = {
 /* commands */
 static const char *roficmd[] = { "rofi", "-show", "run", "-font", "Terminus 10" };
 static const char *termcmd[]  = { "termite", NULL };
+static const char *browsercmd[]  = { "firefox", NULL }; 
+static const char *editorcmd[]  = { "subl3", NULL }; 
 
 #include "includes/movestack.c"
 #include <X11/XF86keysym.h>
@@ -77,6 +79,8 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_r,      spawn,          {.v = roficmd } },
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_w,      spawn,          {.v = browsercmd } }, 
+	{ MODKEY,                       XK_e,      spawn,          {.v = editorcmd } }, 
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -117,7 +121,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_6,                      5)
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      7)
+	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
