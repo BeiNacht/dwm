@@ -322,7 +322,6 @@ struct Pertag {
 	int nmasters[LENGTH(tags) + 1]; /* number of windows in master area */
 	float mfacts[LENGTH(tags) + 1]; /* mfacts per tag */
 	const Layout *ltidxs[LENGTH(tags) + 1]; /* matrix of tags and layouts  */
-	Bool showbars[LENGTH(tags) + 1]; /* display bar for the current tag */
 	Client *prevzooms[LENGTH(tags) + 1]; /* store zoom information */
 };
 
@@ -804,9 +803,6 @@ createmon(void)
 		m->pertag->ltaxes[i][0] = m->ltaxis[0];
 		m->pertag->ltaxes[i][1] = m->ltaxis[1];
 		m->pertag->ltaxes[i][2] = m->ltaxis[2];
-
-		/* init showbar */
-		m->pertag->showbars[i] = m->showbar;
 
 		/* swap focus and zoomswap*/
 		m->pertag->prevzooms[i] = NULL;
@@ -2105,7 +2101,7 @@ tile(Monitor *m)
 void
 togglebar(const Arg *arg)
 {
-	selmon->showbar = selmon->pertag->showbars[selmon->pertag->curtag] = !selmon->showbar;
+	selmon->showbar = !selmon->showbar;
 	updatebarpos(selmon);
 	resizebarwin(selmon);
 	if (showsystray) {
@@ -2172,8 +2168,6 @@ toggletag(const Arg *arg)
 		selmon->ltaxis[0] = selmon->pertag->ltaxes[selmon->pertag->curtag][0];
 		selmon->ltaxis[1] = selmon->pertag->ltaxes[selmon->pertag->curtag][1];
 		selmon->ltaxis[2] = selmon->pertag->ltaxes[selmon->pertag->curtag][2];
-		if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
-			togglebar(NULL);
 		focus(NULL);
 		arrange(selmon);
 	}
@@ -2201,8 +2195,6 @@ toggleview(const Arg *arg)
 		selmon->nmaster = selmon->pertag->nmasters[selmon->pertag->curtag];
 		selmon->mfact = selmon->pertag->mfacts[selmon->pertag->curtag];
 		selmon->lt = selmon->pertag->ltidxs[selmon->pertag->curtag];
-		if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
-			togglebar(NULL);
 		focus(NULL);
 		arrange(selmon);
 	}
@@ -2660,8 +2652,6 @@ view(const Arg *arg)
 	selmon->ltaxis[0] = selmon->pertag->ltaxes[selmon->pertag->curtag][0];
 	selmon->ltaxis[1] = selmon->pertag->ltaxes[selmon->pertag->curtag][1];
 	selmon->ltaxis[2] = selmon->pertag->ltaxes[selmon->pertag->curtag][2];
-	if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
-		togglebar(NULL);
 	focus(NULL);
 	arrange(selmon);
 }
