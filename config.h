@@ -27,16 +27,16 @@ static const unsigned int gappx          = 5;
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
-    { "Galculator",          NULL, NULL, 0, 1, 1, -1 },
-    { "Thunar",              NULL, "File Operation Progress", 0, 1, 1, -1 },
-    { "Pavucontrol",         NULL, NULL, 0, 1, 1, -1 },
-    { "Gksu",                NULL, NULL, 0, 1, 1, -1 }
+    { "Galculator",          NULL, NULL, 0, 1, -1 },
+    { "Thunar",              NULL, "File Operation Progress", 0, 1, -1 },
+    { "Pavucontrol",         NULL, NULL, 0, 1, -1 },
+    { "Gksu",                NULL, NULL, 0, 1, -1 }
 };
 
 /* layout(s) */
 #include "includes/gaplessgrid.c"
 #include "includes/fibonacci.c"
-static const float mfact     = 0.65; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.5; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 static const int  layoutaxis[] = {
@@ -69,7 +69,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *roficmd[] = { "rofi", "-show", "run", "-font", "Terminus 10" };
-static const char *termcmd[]  = { "termite", NULL };
+static const char *termcmd[]  = { "urxvt", NULL };
 static const char *browsercmd[]  = { "google-chrome-stable", NULL }; 
 static const char *editorcmd[]  = { "subl3", NULL }; 
 
