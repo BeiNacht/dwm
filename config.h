@@ -6,12 +6,14 @@ static const char *fonts[] = {
 	"Terminus:size=10"
 };
 
-static const char normbordercolor[]      = "#222222";
-static const char normbgcolor[]          = "#000000";
-static const char normfgcolor[]          = "#A6A6A6";
-static const char selbordercolor[]       = "#A6A6A6";
-static const char selbgcolor[]           = "#A6A6A6";
-static const char selfgcolor[]           = "#000000";
+static const char black[]                = "#000000";
+static const char gray[]                 = "#A6A6A6";
+static const char *colors[SchemeLast][3] = {
+	/*               fg         bg         border   */
+	[SchemeNorm] = { gray, black, black },
+	[SchemeSel] =  { black, gray,  gray  },
+};
+
 static const unsigned int borderpx       = 1;        /* border pixel of windows */
 static const unsigned int snap           = 16;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
