@@ -71,7 +71,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *roficmd[] = { "rofi", "-show", "run", "-font", "Terminus 10" };
-static const char *termcmd[]  = { "urxvt", NULL };
+static const char *termcmd[]  = { "mate-terminal", NULL };
 static const char *browsercmd[]  = { "google-chrome-stable", NULL }; 
 static const char *editorcmd[]  = { "subl3", NULL }; 
 
