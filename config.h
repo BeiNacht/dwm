@@ -30,7 +30,6 @@ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
     { "Galculator",          NULL, NULL, 0, 1, -1 },
-    { "Thunar",              NULL, "File Operation Progress", 0, 1, -1 },
     { "Pavucontrol",         NULL, NULL, 0, 1, -1 },
     { "Gksu",                NULL, NULL, 0, 1, -1 }
 };

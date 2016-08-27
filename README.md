@@ -10,7 +10,6 @@
 - fibonacci
 - uselessgap
 - systray
-- cfacts
 - no background for title
 - save floats
 - flextile
