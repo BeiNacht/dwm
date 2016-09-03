@@ -878,8 +878,6 @@ void
 drawbar(Monitor *m)
 {
 	int x, w, sw = 0, stw = 0;
-	int boxs = drw->fonts->h / 9;
-	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
 	Client *c;
 
@@ -900,30 +898,19 @@ drawbar(Monitor *m)
 			urg |= c->tags;
 	}
 	x = 0;
+	int scheme_num = SchemeNorm;
+	static const char *tagsymbols[] = { "\uf400", "\uf401" };
 	for (i = 0; i < LENGTH(tags); i++) {
 		w = TEXTW(tags[i]);
-		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
-		if (occ & 1 << i)
-			drw_rect(drw, x + boxs, boxs, boxw, boxw,
-			         m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
-			         urg & 1 << i);
+		scheme_num = m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm;
+		drw_setscheme(drw, scheme[scheme_num]);
+		drw_text(drw, x, 0, w, bh, lrpad / 2, (occ & 1 << i) ? tagsymbols[0] : tagsymbols[1], urg & 1 << i);
 		x += w;
 	}
-	w = blw = TEXTW(m->ltsymbol);
-	drw_setscheme(drw, scheme[SchemeNorm]);
-	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
 	if ((w = m->ww - sw - stw - x) > bh) {
-		if (m->sel) {
-			drw_setscheme(drw, scheme[SchemeNorm]);
-			drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
-			if (m->sel->isfloating)
-				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
-		} else {
-			drw_setscheme(drw, scheme[SchemeNorm]);
-			drw_rect(drw, x, 0, w, bh, 1, 1);
-		}
+		drw_setscheme(drw, scheme[SchemeNorm]);
+		drw_rect(drw, x, 0, w, bh, 1, 1);
 	}
 	drw_map(drw, m->barwin, 0, 0, m->ww - stw, bh);
 }

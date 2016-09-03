@@ -2,16 +2,17 @@
 
 /* appearance */
 static const char *fonts[] = {
-	"FontAwesome:size=10",
-	"Terminus:size=10"
+	"Ionicons:antialias=true:size=12",
+	"Terminus:antialias=true:size=10"
 };
 
 static const char black[]                = "#000000";
 static const char gray[]                 = "#A6A6A6";
+static const char white[]                = "#FFFFFF";
 static const char *colors[SchemeLast][3] = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { gray, black, black },
-	[SchemeSel] =  { black, gray,  gray  },
+	[SchemeSel] =  { white, black, white },
 };
 
 static const unsigned int borderpx       = 1;        /* border pixel of windows */

@@ -3,6 +3,7 @@
 ## patches
 - attachaside
 - better border patch
+- circle tag symbols
 - flextile
 - movestack
 - no background for title
