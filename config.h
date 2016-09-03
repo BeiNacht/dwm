@@ -29,9 +29,10 @@ static const unsigned int gappx          = 5;
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
-    { "Galculator",          NULL, NULL, 0, 1, -1 },
-    { "Pavucontrol",         NULL, NULL, 0, 1, -1 },
-    { "Gksu",                NULL, NULL, 0, 1, -1 }
+	{ "Galculator",          NULL, NULL, 0, 1, 0, 0, -1 },
+	{ "Pavucontrol",         NULL, NULL, 0, 1, 0, 0, -1 },
+	{ "Gksu",                NULL, NULL, 0, 1, 0, 0, -1 },
+	{ "Mate-terminal",       NULL, NULL, 0, 0, 1, 0, -1 }
 };
 
 /* layout(s) */

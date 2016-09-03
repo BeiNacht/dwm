@@ -1,13 +1,14 @@
 # my dwm fork
 
 ## patches
-- movestack
-- better border patch
 - attachaside
-- pertag
-- viewontag
-- uselessgap
-- systray
-- no background for title
-- save floats
+- better border patch
 - flextile
+- movestack
+- no background for title
+- pertag
+- save floats
+- swallow
+- systray
+- uselessgap
+- viewontag
