@@ -885,11 +885,9 @@ drawbar(Monitor *m)
 		stw = getsystraywidth();
 
 	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon) { /* status is only drawn on selected monitor */
-		drw_setscheme(drw, scheme[SchemeNorm]);
-		sw = TEXTW(stext) - lrpad / 2; /* no right padding so status text hugs the corner */
-		drw_text(drw, m->ww - sw - stw, 0, sw, bh, lrpad / 2 - 2, stext, 0);
-	}
+	drw_setscheme(drw, scheme[SchemeNorm]);
+	sw = TEXTW(stext) - lrpad / 2; /* no right padding so status text hugs the corner */
+	drw_text(drw, m->ww - sw - stw, 0, sw, bh, lrpad / 2 - 2, stext, 0);
 
 	resizebarwin(m);
 	for (c = m->clients; c; c = c->next) {
@@ -2051,7 +2049,7 @@ systraytomon(Monitor *m) {
 	if (!systraypinning) {
 		if (!m)
 			return selmon;
-		return m == selmon ? m : NULL;
+		return m;
 	}
 	for (n = 1, t = mons; t && t->next; n++, t = t->next);
 	for (i = 1, t = mons; t && t->next && i < systraypinning; i++, t = t->next);
@@ -2626,7 +2624,10 @@ updatestatus(void)
 {
 	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
 		strcpy(stext, "dwm-"VERSION);
-	drawbar(selmon);
+
+	Monitor* m;
+	for(m = mons; m; m = m->next)
+		drawbar(m);
 }
 
 void

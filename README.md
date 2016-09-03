@@ -9,6 +9,7 @@
 - no background for title
 - pertag
 - save floats
+- statusallmons
 - swallow
 - systray
 - uselessgap
