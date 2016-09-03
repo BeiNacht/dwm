@@ -877,7 +877,7 @@ detachstack(Client *c)
 void
 drawbar(Monitor *m)
 {
-	int x, w, sw = 0, stw = 0;
+	int x, w, sw = 0, stw = 0, swhalf = 0;
 	unsigned int i, occ = 0, urg = 0;
 	Client *c;
 
@@ -885,9 +885,10 @@ drawbar(Monitor *m)
 		stw = getsystraywidth();
 
 	/* draw status first so it can be overdrawn by tags later */
-	drw_setscheme(drw, scheme[SchemeNorm]);
+	drw_setscheme(drw, scheme[SchemeSel]);
 	sw = TEXTW(stext) - lrpad / 2; /* no right padding so status text hugs the corner */
-	drw_text(drw, m->ww - sw - stw, 0, sw, bh, lrpad / 2 - 2, stext, 0);
+	swhalf = sw / 2;
+	drw_text(drw, m->ww / 2 - swhalf, 0, sw, bh, lrpad / 2 - 2, stext, 0);
 
 	resizebarwin(m);
 	for (c = m->clients; c; c = c->next) {
@@ -906,7 +907,13 @@ drawbar(Monitor *m)
 		x += w;
 	}
 
-	if ((w = m->ww - sw - stw - x) > bh) {
+	if ((w = m->ww / 2 - swhalf - x) > bh) {
+		drw_setscheme(drw, scheme[SchemeNorm]);
+		drw_rect(drw, x, 0, w, bh, 1, 1);
+	}
+
+	if ((w = m->ww / 2 + swhalf - stw) > bh) {
+		x = m->ww / 2 + swhalf;
 		drw_setscheme(drw, scheme[SchemeNorm]);
 		drw_rect(drw, x, 0, w, bh, 1, 1);
 	}
