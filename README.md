@@ -1,10 +1,11 @@
 # my dwm fork
 
 ## patches
-- attachaside
+- attachbelow
 - better border patch
 - circle tag symbols
 - flextile
+- middle statusbar
 - movestack
 - no background for title
 - pertag
