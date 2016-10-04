@@ -1,7 +1,6 @@
 # my dwm fork
 
 ## patches
-- attachbelow
 - better border patch
 - circle tag symbols
 - flextile
