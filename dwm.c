@@ -624,6 +624,9 @@ clientmessage(XEvent *e)
 		if (cme->data.l[1] == SYSTEM_TRAY_REQUEST_DOCK) {
 			if (!(c = (Client *)calloc(1, sizeof(Client))))
 				die("fatal: could not malloc() %u bytes\n", sizeof(Client));
+			XClassHint *ch = XAllocClassHint();
+			ch->res_name = "icon";
+			ch->res_class = "dwm";
 			c->win = cme->data.l[2];
 			c->mon = selmon;
 			c->next = systray->icons;
@@ -642,6 +645,7 @@ clientmessage(XEvent *e)
 			XAddToSaveSet(dpy, c->win);
 			XSelectInput(dpy, c->win, StructureNotifyMask | PropertyChangeMask | ResizeRedirectMask);
 			XReparentWindow(dpy, c->win, systray->win, 0, 0);
+			XSetClassHint(dpy, c->win, ch);
 			/* use parents background color */
 			swa.background_pixel  = scheme[SchemeNorm][ColBackground].pixel;
 			XChangeWindowAttributes(dpy, c->win, CWBackPixel, &swa);
@@ -654,6 +658,7 @@ clientmessage(XEvent *e)
 			resizebarwin(selmon);
 			updatesystray();
 			setclientstate(c, NormalState);
+			XFree(ch);
 		}
 		return;
 	}
@@ -2410,6 +2415,9 @@ updatebars(void)
 		.background_pixmap = ParentRelative,
 		.event_mask = ButtonPressMask|ExposureMask
 	};
+	XClassHint *ch = XAllocClassHint();
+	ch->res_name = "dwmstatus";
+	ch->res_class = "dwm";
 	for (m = mons; m; m = m->next) {
 		if (m->barwin)
 			continue;
@@ -2423,7 +2431,9 @@ updatebars(void)
 		if (showsystray && m == systraytomon(m))
 			XMapRaised(dpy, systray->win);
 		XMapRaised(dpy, m->barwin);
+		XSetClassHint(dpy, m->barwin, ch);
 	}
+	XFree(ch);
 }
 
 void
@@ -2674,6 +2684,7 @@ updatesystray(void) {
 
 	if (!showsystray)
 		return;
+
 	if (!systray) {
 		/* init systray */
 		if (!(systray = (Systray *)calloc(1, sizeof(Systray))))
@@ -2691,14 +2702,14 @@ updatesystray(void) {
 		if (XGetSelectionOwner(dpy, netatom[NetSystemTray]) == systray->win) {
 			sendevent(root, xatom[Manager], StructureNotifyMask, CurrentTime, netatom[NetSystemTray], systray->win, 0, 0);
 			XSync(dpy, False);
-		}
-		else {
+		} else {
 			fprintf(stderr, "dwm: unable to obtain system tray.\n");
 			free(systray);
 			systray = NULL;
 			return;
 		}
 	}
+
 	for (w = 0, i = systray->icons; i; i = i->next) {
 		/* make sure the background color stays the same */
 		wa.background_pixel  = scheme[SchemeNorm][ColBackground].pixel;
