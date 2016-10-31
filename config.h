@@ -11,7 +11,7 @@ static const char gray[]                 = "#A6A6A6";
 static const char white[]                = "#FFFFFF";
 static const char *colors[SchemeLast][3] = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { gray, black, black },
+	[SchemeNorm] = { gray, black, gray },
 	[SchemeSel] =  { white, black, white },
 };
 
@@ -33,7 +33,7 @@ static const Rule rules[] = {
 	{ "Galculator",          NULL, NULL, 0, 1, 0, 0, -1 },
 	{ "Pavucontrol",         NULL, NULL, 0, 1, 0, 0, -1 },
 	{ "Gksu",                NULL, NULL, 0, 1, 0, 0, -1 },
-	{ "Mate-terminal",       NULL, NULL, 0, 0, 1, 0, -1 }
+	{ "Mate-terminal",       NULL, NULL, 0, 1, 0, 0, -1 }
 };
 
 /* layout(s) */

@@ -204,6 +204,7 @@ static void expose(XEvent *e);
 static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusstack(const Arg *arg);
+static unsigned long getcolor_in_window(const char *colstr, Window w, unsigned long fallback);
 static Atom getatomprop(Client *c, Atom prop);
 static pid_t getparentprocess(pid_t p);
 static int getrootptr(int *x, int *y);
@@ -969,7 +970,7 @@ focus(Client *c)
 		detachstack(c);
 		attachstack(c);
 		grabbuttons(c, 1);
-		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+		XSetWindowBorder(dpy, c->win, getcolor_in_window(white, c->win, scheme[SchemeNorm][ColBorder].pixel));
 		setfocus(c);
 	} else {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
@@ -1056,6 +1057,22 @@ getparentprocess(pid_t p)
 #endif /* __linux__ */
 
 	return (pid_t)v;
+}
+
+unsigned long
+getcolor_in_window(const char *colstr, Window w, unsigned long fallback) {
+   if (!w)
+       return fallback;
+   XWindowAttributes attr;
+   if (!XGetWindowAttributes(dpy, w, &attr))
+       return fallback;
+
+   Colormap cmap = attr.colormap;
+   XColor color;
+
+   if(!XAllocNamedColor(dpy, cmap, colstr, &color, &color))
+       return fallback;
+   return color.pixel;
 }
 
 int
@@ -1269,7 +1286,7 @@ manage(Window w, XWindowAttributes *wa)
 
 	wc.border_width = c->bw;
 	XConfigureWindow(dpy, w, CWBorderWidth, &wc);
-	XSetWindowBorder(dpy, w, scheme[SchemeNorm][ColBorder].pixel);
+	XSetWindowBorder(dpy, w, getcolor_in_window(gray, w, scheme[SchemeNorm][ColBorder].pixel));
 	configure(c); /* propagates border_width, if size doesn't change */
 	updatewindowtype(c);
 	updatesizehints(c);
@@ -2321,7 +2338,7 @@ unfocus(Client *c, int setfocus)
 	if (!c)
 		return;
 	grabbuttons(c, 0);
-	XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColBorder].pixel);
+	XSetWindowBorder(dpy, c->win, getcolor_in_window(gray, c->win, scheme[SchemeNorm][ColBorder].pixel));
 	if (setfocus) {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
