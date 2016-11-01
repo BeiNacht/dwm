@@ -109,6 +109,7 @@ typedef struct Client Client;
 struct Client {
 	char name[256];
 	float mina, maxa;
+	float cfact;
 	int x, y, w, h;
 	int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
 	int oldx, oldy, oldw, oldh;
@@ -246,6 +247,7 @@ static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
 static void setlayout(const Arg *arg);
+static void setcfact(const Arg *arg);
 static void setmfact(const Arg *arg);
 static void setup(void);
 static int shifttag(int dist);
@@ -1260,6 +1262,7 @@ manage(Window w, XWindowAttributes *wa)
 	c->w = c->oldw = wa->width;
 	c->h = c->oldh = wa->height;
 	c->oldbw = wa->border_width;
+	c->cfact = 1.0;
 
 	updatetitle(c);
 	if (XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
@@ -1865,6 +1868,26 @@ sendevent(Window w, Atom proto, int mask, long d0, long d1, long d2, long d3, lo
 	return exists;
 }
 
+void 
+setcfact(const Arg *arg)
+{
+	float f;
+	Client *c;
+
+	c = selmon->sel;
+	if(!arg || !c || !selmon->lt->arrange)
+		return;
+
+	f = arg->f + c->cfact;
+	if(arg->f == 0.0)
+		f = 1.0;
+	else if(f < 0.25 || f > 4.0) 
+		return;
+
+	c->cfact = f;
+	arrange(selmon);
+}
+
 void
 setfocus(Client *c)
 {
@@ -2145,44 +2168,18 @@ termforwin(const Client *w)
 void
 tile(Monitor *m)
 {
-	char sym1 = 61, sym2 = 93, sym3 = 61, sym;
-	int x1 = m->wx, y1 = m->wy, h1 = m->wh, w1 = m->ww, X1 = x1 + w1, Y1 = y1 + h1;
-	int x2 = m->wx, y2 = m->wy, h2 = m->wh, w2 = m->ww, X2 = x2 + w2, Y2 = y2 + h2;
+	int x1 = m->wx, y1 = m->wy, h1 = m->wh, w1 = m->ww;
+	int x2 = m->wx, y2 = m->wy, h2 = m->wh, w2 = m->ww;
 	unsigned int i, n, n1, n2;
 	Client *c;
+	float mfacts = 0, sfacts = 0;
 
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-	if(m->nmaster > n)
-		m->nmaster = (n == 0) ? 1 : n;
-	/* layout symbol */
-	if(abs(m->ltaxis[0]) == m->ltaxis[1])    /* explicitly: ((abs(m->ltaxis[0]) == 1 && m->ltaxis[1] == 1) || (abs(m->ltaxis[0]) == 2 && m->ltaxis[1] == 2)) */
-		sym1 = 124;
-	if(abs(m->ltaxis[0]) == m->ltaxis[2])
-		sym3 = 124;
-	if(m->ltaxis[1] == 3)
-		sym1 = (n == 0) ? 0 : m->nmaster;
-	if(m->ltaxis[2] == 3)
-		sym3 = (n == 0) ? 0 : n - m->nmaster;
-	if(m->ltaxis[0] < 0) {
-		sym = sym1;
-		sym1 = sym3;
-		sym2 = 91;
-		sym3 = sym;
-	}
-	if(m->nmaster == 1) {
-		if(m->ltaxis[0] > 0)
-			sym1 = 91;
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
+		if (n < m->nmaster)
+			mfacts += c->cfact;
 		else
-			sym3 = 93;
+			sfacts += c->cfact;
 	}
-	if(m->nmaster > 1 && m->ltaxis[1] == 3 && m->ltaxis[2] == 3)
-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "%d%c%d", sym1, sym2, sym3);
-	else if((m->nmaster > 1 && m->ltaxis[1] == 3 && m->ltaxis[0] > 0) || (m->ltaxis[2] == 3 && m->ltaxis[0] < 0))
-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "%d%c%c", sym1, sym2, sym3);
-	else if((m->ltaxis[2] == 3 && m->ltaxis[0] > 0) || (m->nmaster > 1 && m->ltaxis[1] == 3 && m->ltaxis[0] < 0))
-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "%c%c%d", sym1, sym2, sym3);
-	else
-		snprintf(m->ltsymbol, sizeof m->ltsymbol, "%c%c%c", sym1, sym2, sym3);
 	if (n == 0)
 		return;
 
@@ -2192,23 +2189,19 @@ tile(Monitor *m)
 		w2 -= w1;
 		x1 += (m->ltaxis[0] < 0) ? w2 : 0;
 		x2 += (m->ltaxis[0] < 0) ? 0 : w1;
-		X1 = x1 + w1;
-		X2 = x2 + w2;
 	} else if(abs(m->ltaxis[0]) == 2 && n > m->nmaster) {
 		h1 *= m->mfact;
 		h2 -= h1;
 		y1 += (m->ltaxis[0] < 0) ? h2 : 0;
 		y2 += (m->ltaxis[0] < 0) ? 0 : h1;
-		Y1 = y1 + h1;
-		Y2 = y2 + h2;
 	}
 	/* master */
 	n1 = (m->ltaxis[1] != 1 || w1 / m->nmaster < bh) ? 1 : m->nmaster;
 	n2 = (m->ltaxis[1] != 2 || h1 / m->nmaster < bh) ? 1 : m->nmaster;
 	for(i = 0, c = nexttiled(m->clients); i < m->nmaster; c = nexttiled(c->next), i++) {
-		resize(c, x1, y1,
-			(m->ltaxis[1] == 1 && i + 1 == m->nmaster) ? X1 - x1 - 2 * c->bw : w1 / n1 - 2 * c->bw,
-			(m->ltaxis[1] == 2 && i + 1 == m->nmaster) ? Y1 - y1 - 2 * c->bw : h1 / n2 - 2 * c->bw, False);
+		float w = w1 * (m->ltaxis[1] == 1 ? c->cfact / mfacts : 1.) - 2 * c->bw;
+		float h = h1 * (m->ltaxis[1] == 2 ? c->cfact / mfacts : 1.) - 2 * c->bw;
+		resize(c, x1, y1, w, h, False);
 		if(n1 > 1)
 			x1 = c->x + WIDTH(c);
 		if(n2 > 1)
@@ -2219,9 +2212,9 @@ tile(Monitor *m)
 		n1 = (m->ltaxis[2] != 1 || w2 / (n - m->nmaster) < bh) ? 1 : n - m->nmaster;
 		n2 = (m->ltaxis[2] != 2 || h2 / (n - m->nmaster) < bh) ? 1 : n - m->nmaster;
 		for(i = 0; c; c = nexttiled(c->next), i++) {
-			resize(c, x2, y2,
-				(m->ltaxis[2] == 1 && i + 1 == n - m->nmaster) ? X2 - x2 - 2 * c->bw : w2 / n1 - 2 * c->bw,
-				(m->ltaxis[2] == 2 && i + 1 == n - m->nmaster) ? Y2 - y2 - 2 * c->bw : h2 / n2 - 2 * c->bw, False);
+			float w = w2 * (m->ltaxis[2] == 1 ? c->cfact / sfacts : 1.) - 2 * c->bw;
+			float h = h2 * (m->ltaxis[2] == 2 ? c->cfact / sfacts : 1.) - 2 * c->bw;
+			resize(c, x2, y2, w, h, False);
 			if(n1 > 1)
 				x2 = c->x + WIDTH(c);
 			if(n2 > 1)

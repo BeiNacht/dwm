@@ -3,7 +3,7 @@
 ## patches
 - better border patch
 - circle tag symbols
-- flextile
+- flextile + cfacts
 - middle statusbar
 - movestack
 - no background for title
