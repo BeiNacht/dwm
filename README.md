@@ -6,8 +6,7 @@
 - flextile + cfacts
 - middle statusbar
 - movestack
-- no title
-- center clock
+- no background for title
 - pertag
 - save floats
 - statusallmons
