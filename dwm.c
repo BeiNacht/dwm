@@ -472,7 +472,7 @@ arrangemon(Monitor *m)
 	Client *c;
 	strncpy(m->ltsymbol, m->lt->symbol, sizeof m->ltsymbol);
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-	if (n > 1 || !m->lt->arrange) {
+	if ((m->lt->arrange != monocle && n > 1) || !m->lt->arrange) {
 		for (c = m->clients; c; c = c->next) {
 			if (ISVISIBLE(c) && (!m->lt->arrange || !c->isfloating) && (c->bw != borderpx)) {
 				c->oldbw = c->oldbw;
@@ -1362,7 +1362,7 @@ mirrorlayout(const Arg *arg) {
 void
 monocle(Monitor *m)
 {
-	unsigned int n = 0, r = 0;
+	unsigned int n = 0;
 	Client *c;
 
 	for (c = m->clients; c; c = c->next)
@@ -1371,14 +1371,14 @@ monocle(Monitor *m)
 	if (n > 0 && m->lt->arrange == monocle) /* override layout symbol */
 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
 	for(c = nexttiled(m->clients); c; c = nexttiled(c->next)) {
+		// I'm not sure, but calling resize with the border width subtractions
+		// fixes a glitch where windows would not redraw until they were
+		// manually resized after restarting dwm.
+		resize(c, m->wx, m->wy, m->ww - (2 * c->bw), m->wh - (2 * c->bw), False);
 		if (c->bw) {
 			c->oldbw = c->bw;
 			c->bw = 0;
-			r = 1;
-		}
-		resize(c, m->wx, m->wy, m->ww - (2 * c->bw), m->wh - (2 * c->bw), False);
-		if(r) {
-			resizeclient(c, m->wx, m->wy, m->ww - (2 * c->bw), m->wh - (2 * c->bw));
+			resizeclient(c, m->wx, m->wy, m->ww, m->wh);
 		}
 	}
 }
@@ -1639,8 +1639,7 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	} else {
 		/* Remove border and gap if layout is monocle or only one client */
 		if (selmon->lt->arrange == monocle || n == 1) {
-			gapoffset = 0;
-			gapincr = -2 * borderpx;
+			gapincr = gapoffset = 0;
 			wc.border_width = 0;
 		} else {
 			gapoffset = gappx;
@@ -2252,10 +2251,12 @@ togglefloating(const Arg *arg)
 		return;
 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
 	if (selmon->sel->isfloating) {
-		selmon->sel->oldbw = selmon->sel->bw;
-		selmon->sel->bw = borderpx;
-		resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
-		       selmon->sel->sfw, selmon->sel->sfh, False);
+		if (selmon->sel->bw != borderpx) {
+			selmon->sel->oldbw = selmon->sel->bw;
+			selmon->sel->bw = borderpx;
+		}
+		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
+		       selmon->sel->w - selmon->sel->bw * 2, selmon->sel->h - selmon->sel->bw * 2, 0);
 	}
 	else {
 		/*save last known float dimensions*/
