@@ -15,7 +15,7 @@ static const char *colors[SchemeLast][3] = {
 	[SchemeSel] =  { white, black, white },
 };
 
-static const unsigned int borderpx       = 1;        /* border pixel of windows */
+static const unsigned int borderpx       = 0;        /* border pixel of windows */
 static const unsigned int snap           = 16;       /* snap pixel */
 static const unsigned int systraypinning = 1;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
@@ -32,8 +32,8 @@ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 static const Rule rules[] = {
 	{ "Galculator",          NULL, NULL, 0, 1, 0, 0, -1 },
 	{ "Pavucontrol",         NULL, NULL, 0, 1, 0, 0, -1 },
-	{ "Gksu",                NULL, NULL, 0, 1, 0, 0, -1 },
-	{ "Mate-terminal",       NULL, NULL, 0, 1, 0, 0, -1 },
+	{ "Blueman-manager",     NULL, NULL, 0, 1, 0, 0, -1 },
+	{ "Mate-terminal",       NULL, NULL, 0, 0, 1, 1, -1 },
 	{ "URxvt",               NULL, NULL, 0, 0, 1, 1, -1 }
 };
 
@@ -68,9 +68,10 @@ static const Layout layouts[] = {
 
 /* commands */
 static const char *roficmd[] = { "rofi", "-show", "run", "-font", "Terminus 10" };
-static const char *termcmd[]  = { "urxvt", NULL };
-static const char *browsercmd[]  = { "google-chrome-stable", NULL }; 
-static const char *editorcmd[]  = { "subl3", NULL }; 
+static const char *termcmd[]  = { "mate-terminal", NULL };
+static const char *browsercmd[]  = { "google-chrome-stable", NULL };
+static const char *editorcmd[]  = { "subl3", NULL };
+static const char *soundcmd[]  = { "pavucontrol", NULL };
 
 #include <X11/XF86keysym.h>
 static Key keys[] = {
@@ -79,6 +80,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_w,      spawn,          {.v = browsercmd } }, 
 	{ MODKEY,                       XK_e,      spawn,          {.v = editorcmd } }, 
+	{ MODKEY,                       XK_v,      spawn,          {.v = soundcmd } }, 
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },

@@ -679,7 +679,8 @@ clientmessage(XEvent *e)
 			for(i=0; !(c->tags & 1 << i); i++);
 			view(&(Arg){.ui = 1 << i});
 		}
-		pop(c);
+		focus(c);
+		arrange(c->mon);
 	}
 }
 
@@ -1257,10 +1258,10 @@ manage(Window w, XWindowAttributes *wa)
 	c->win = w;
 	c->pid = winpid(w);
 	/* geometry */
-	c->x = c->oldx = wa->x;
-	c->y = c->oldy = wa->y;
-	c->w = c->oldw = wa->width;
-	c->h = c->oldh = wa->height;
+	c->sfx = c->x = c->oldx = wa->x;
+	c->sfy = c->y = c->oldy = wa->y;
+	c->sfw = c->w = c->oldw = wa->width;
+	c->sfh = c->h = c->oldh = wa->height;
 	c->oldbw = wa->border_width;
 	c->cfact = 1.0;
 
@@ -2251,14 +2252,12 @@ togglefloating(const Arg *arg)
 		return;
 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
 	if (selmon->sel->isfloating) {
-		if (selmon->sel->bw != borderpx) {
-			selmon->sel->oldbw = selmon->sel->bw;
-			selmon->sel->bw = borderpx;
-		}
-		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
-		       selmon->sel->w - selmon->sel->bw * 2, selmon->sel->h - selmon->sel->bw * 2, 0);
-	}
-	else {
+		selmon->sel->oldbw = selmon->sel->bw;
+		selmon->sel->bw = borderpx;
+		/* restore last know float dimentions */
+		resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
+		       selmon->sel->sfw, selmon->sel->sfh, 0);
+	} else {
 		/*save last known float dimensions*/
 		selmon->sel->sfx = selmon->sel->x;
 		selmon->sel->sfy = selmon->sel->y;
