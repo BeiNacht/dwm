@@ -33,7 +33,7 @@ static const Rule rules[] = {
 	{ "Galculator",          NULL, NULL, 0, 1, 0, 0, -1 },
 	{ "Pavucontrol",         NULL, NULL, 0, 1, 0, 0, -1 },
 	{ "Blueman-manager",     NULL, NULL, 0, 1, 0, 0, -1 },
-	{ "Mate-terminal",       NULL, NULL, 0, 0, 1, 1, -1 },
+	{ "Mate-terminal",       NULL, NULL, 0, 0, 0, 0, -1 },
 	{ "URxvt",               NULL, NULL, 0, 0, 1, 1, -1 }
 };
 
