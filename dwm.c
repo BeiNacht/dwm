@@ -1626,17 +1626,28 @@ void
 resizeclient(Client *c, int x, int y, int w, int h)
 {
 	XWindowChanges wc;
+	unsigned int n;
 	unsigned int gapoffset;
 	unsigned int gapincr;
+	Client *nbc;
 
 	wc.border_width = c->bw;
+
+	/* Get number of clients for the selected monitor */
+	for (n = 0, nbc = nexttiled(selmon->clients); nbc; nbc = nexttiled(nbc->next), n++);
 
 	/* Do nothing if layout is floating */
 	if (c->isfloating || selmon->lt->arrange == NULL) {
 		gapincr = gapoffset = 0;
 	} else {
-		gapoffset = gappx;
-		gapincr = 2 * gappx;
+		/* Remove border and gap if layout is monocle or only one client */
+		if (selmon->lt->arrange == monocle || n == 1) {
+			gapincr = gapoffset = 0;
+			wc.border_width = 0;
+		} else {
+			gapoffset = gappx;
+			gapincr = 2 * gappx;
+		}
 	}
 
 	c->oldx = c->x; c->x = wc.x = x + gapoffset;
