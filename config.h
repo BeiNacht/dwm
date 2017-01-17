@@ -6,9 +6,9 @@ static const char *fonts[] = {
 	"Terminus:antialias=true:size=10"
 };
 
-static const char black[]                = "#33303B";
-static const char gray[]                 = "#4F4B58";
-static const char white[]                = "#C0A79A";
+static const char black[]                = "#000000";
+static const char gray[]                 = "#A6A6A6";
+static const char white[]                = "#FFFFFF";
 static const char *colors[SchemeLast][3] = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { gray, black, gray },
